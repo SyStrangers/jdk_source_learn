@@ -772,6 +772,7 @@ public final class String
         if (index < 0 || index > value.length) {
             throw new IndexOutOfBoundsException();
         }
+        //在当前字符串index位置往后移动codePointOffset个位置 并输出当前字符的ASCII码
         return Character.offsetByCodePointsImpl(value, 0, value.length,
                 index, codePointOffset);
     }
@@ -781,6 +782,7 @@ public final class String
      * This method doesn't perform any range checking.
      */
     void getChars(char dst[], int dstBegin) {
+        //将此字符串中从dstBegin到结尾的字符串中的字符复制到dst数组中
         System.arraycopy(value, 0, dst, dstBegin, value.length);
     }
 
@@ -824,6 +826,7 @@ public final class String
         if (srcBegin > srcEnd) {
             throw new StringIndexOutOfBoundsException(srcEnd - srcBegin);
         }
+        //复制字符串中从srcBegin到srcEnd的长度的字符到dst数组中
         System.arraycopy(value, srcBegin, dst, dstBegin, srcEnd - srcBegin);
     }
 
@@ -870,7 +873,7 @@ public final class String
      *                 dst.length}
      *          </ul>
      */
-    @Deprecated
+    @Deprecated //弃用方法
     public void getBytes(int srcBegin, int srcEnd, byte dst[], int dstBegin) {
         if (srcBegin < 0) {
             throw new StringIndexOutOfBoundsException(srcBegin);
@@ -881,13 +884,14 @@ public final class String
         if (srcBegin > srcEnd) {
             throw new StringIndexOutOfBoundsException(srcEnd - srcBegin);
         }
+        //判断当前dst不为空
         Objects.requireNonNull(dst);
 
         int j = dstBegin;
         int n = srcEnd;
         int i = srcBegin;
         char[] val = value;   /* avoid getfield opcode */
-
+        //把value数组中的值复制到dst目标数组中 时间复杂度O
         while (i < n) {
             dst[j++] = (byte)val[i++];
         }
@@ -915,7 +919,9 @@ public final class String
      */
     public byte[] getBytes(String charsetName)
             throws UnsupportedEncodingException {
+        //判断是否为空 抛出空异常
         if (charsetName == null) throw new NullPointerException();
+        //给当前的value数组进行重新编码，编码为charsetName
         return StringCoding.encode(charsetName, value, 0, value.length);
     }
 
@@ -939,6 +945,7 @@ public final class String
      */
     public byte[] getBytes(Charset charset) {
         if (charset == null) throw new NullPointerException();
+        //对字符串进行编码转换
         return StringCoding.encode(charset, value, 0, value.length);
     }
 
@@ -956,6 +963,7 @@ public final class String
      * @since      JDK1.1
      */
     public byte[] getBytes() {
+        //使用平台默认的字符对当前字符串进行编码转换
         return StringCoding.encode(value, 0, value.length);
     }
 
@@ -975,9 +983,11 @@ public final class String
      * @see  #equalsIgnoreCase(String)
      */
     public boolean equals(Object anObject) {
+        //判断是否为同一个对象 指向同一个地址
         if (this == anObject) {
             return true;
         }
+        //判断类型是否相同
         if (anObject instanceof String) {//判断类型是否为String
             String anotherString = (String)anObject;//强转成String
             int n = value.length;
@@ -1012,6 +1022,7 @@ public final class String
      * @since  1.4
      */
     public boolean contentEquals(StringBuffer sb) {
+        //判断与StringBuffer的内容是否相同
         return contentEquals((CharSequence)sb);
     }
 
@@ -1048,7 +1059,9 @@ public final class String
      */
     public boolean contentEquals(CharSequence cs) {
         // Argument is a StringBuffer, StringBuilder
+        //当前字符 是否为 AbstractStringBuilder
         if (cs instanceof AbstractStringBuilder) {
+            //类型是否为StringBuffer
             if (cs instanceof StringBuffer) {
                 synchronized(cs) {
                    return nonSyncContentEquals((AbstractStringBuilder)cs);
@@ -1103,7 +1116,9 @@ public final class String
      *
      * @see  #equals(Object)
      */
-    public boolean equalsIgnoreCase(String anotherString) {
+    public boolean equalsIgnoreCase(String anotherString) {//忽略大小写 比较两个字符串是否一样
+        //如果两个是同一个对象  直接返回true 当是不同对象 先判断传入的anotherString是否为空 在比较两个字符串数组的长度
+        // 再通过regionMatches方法进行比较
         return (this == anotherString) ? true
                 : (anotherString != null)
                 && (anotherString.value.length == value.length)
@@ -1151,7 +1166,7 @@ public final class String
      *          value greater than {@code 0} if this string is
      *          lexicographically greater than the string argument.
      */
-    public int compareTo(String anotherString) {
+    public int compareTo(String anotherString) { //比较两个字符串是否相等 相等 0 小于 小于0 >大于0
         int len1 = value.length;
         int len2 = anotherString.value.length;
         int lim = Math.min(len1, len2);
@@ -1182,6 +1197,7 @@ public final class String
      * @see     java.text.Collator#compare(String, String)
      * @since   1.2
      */
+    //可以用于直接比较两个字符串的对象
     public static final Comparator<String> CASE_INSENSITIVE_ORDER
                                          = new CaseInsensitiveComparator();
     private static class CaseInsensitiveComparator
@@ -1236,7 +1252,7 @@ public final class String
      * @see     java.text.Collator#compare(String, String)
      * @since   1.2
      */
-    public int compareToIgnoreCase(String str) {
+    public int compareToIgnoreCase(String str) {//不考虑大小写比较当前字符串和str是否相等
         return CASE_INSENSITIVE_ORDER.compare(this, str);
     }
 
