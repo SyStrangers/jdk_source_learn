@@ -1289,7 +1289,7 @@ public final class String
      *          {@code false} otherwise.
      */
     public boolean regionMatches(int toffset, String other, int ooffset,
-            int len) {
+            int len) { //按位比较字符是否相等 toffset this偏移量 ooffset otherå偏移量
         char ta[] = value;
         int to = toffset;
         char pa[] = other.value;
@@ -1359,7 +1359,7 @@ public final class String
      *          argument.
      */
     public boolean regionMatches(boolean ignoreCase, int toffset,
-            String other, int ooffset, int len) {
+            String other, int ooffset, int len) {//判断是否相等
         char ta[] = value;
         int to = toffset;
         char pa[] = other.value;
@@ -1367,7 +1367,8 @@ public final class String
         // Note: toffset, ooffset, or len might be near -1>>>1.
         if ((ooffset < 0) || (toffset < 0)
                 || (toffset > (long)value.length - len)
-                || (ooffset > (long)other.value.length - len)) {
+                || (ooffset > (long)other.value.length - len)) {//判断
+            // 传入的参数是否小于0 是否大于value.length-len长度 是否大于other.value.length-len的长度
             return false;
         }
         while (len-- > 0) {
@@ -1376,7 +1377,7 @@ public final class String
             if (c1 == c2) {
                 continue;
             }
-            if (ignoreCase) {
+            if (ignoreCase) {//是否忽略大小写的情况
                 // If characters don't match but case may be ignored,
                 // try converting both characters to uppercase.
                 // If the results match, then the comparison scan should
@@ -1416,7 +1417,7 @@ public final class String
      *          this.substring(toffset).startsWith(prefix)
      *          </pre>
      */
-    public boolean startsWith(String prefix, int toffset) {
+    public boolean startsWith(String prefix, int toffset) {//从指定位置对开头进行匹配
         char ta[] = value;
         int to = toffset;
         char pa[] = prefix.value;
@@ -1447,7 +1448,7 @@ public final class String
      *          {@link #equals(Object)} method.
      * @since   1. 0
      */
-    public boolean startsWith(String prefix) {
+    public boolean startsWith(String prefix) {//从0开始匹配传入的字符串
         return startsWith(prefix, 0);
     }
 
@@ -1462,7 +1463,7 @@ public final class String
      *          empty string or is equal to this {@code String} object
      *          as determined by the {@link #equals(Object)} method.
      */
-    public boolean endsWith(String suffix) {
+    public boolean endsWith(String suffix) {//从尾开始匹配传入的字符串
         return startsWith(suffix, value.length - suffix.value.length);
     }
 
@@ -1479,7 +1480,7 @@ public final class String
      *
      * @return  a hash code value for this object.
      */
-    public int hashCode() {
+    public int hashCode() {//返回此字符串的hashcode
         int h = hash;
         if (h == 0 && value.length > 0) {
             char val[] = value;
@@ -1516,7 +1517,7 @@ public final class String
      *          character sequence represented by this object, or
      *          {@code -1} if the character does not occur.
      */
-    public int indexOf(int ch) {
+    public int indexOf(int ch) { //查找字符是否存在于当前字符串中
         return indexOf(ch, 0);
     }
 
@@ -1568,7 +1569,7 @@ public final class String
             return -1;
         }
 
-        if (ch < Character.MIN_SUPPLEMENTARY_CODE_POINT) {
+        if (ch < Character.MIN_SUPPLEMENTARY_CODE_POINT) {//小于65535
             // handle most cases here (ch is a BMP code point or a
             // negative value (invalid code point))
             final char[] value = this.value;

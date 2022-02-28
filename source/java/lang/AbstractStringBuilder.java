@@ -203,12 +203,12 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
      *               {@code newLength} argument is negative.
      */
     public void setLength(int newLength) {
-        if (newLength < 0)
+        if (newLength < 0) //新的长度不能小于0
             throw new StringIndexOutOfBoundsException(newLength);
         ensureCapacityInternal(newLength);
 
         if (count < newLength) {
-            Arrays.fill(value, count, newLength, '\0');
+            Arrays.fill(value, count, newLength, '\0');//填充当前的新数组
         }
 
         count = newLength;
